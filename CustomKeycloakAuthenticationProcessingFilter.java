@@ -15,6 +15,7 @@ import org.keycloak.adapters.spi.AuthChallenge;
 import org.keycloak.adapters.spi.AuthOutcome;
 import org.keycloak.adapters.spi.HttpFacade;
 import org.keycloak.adapters.springsecurity.KeycloakAuthenticationException;
+import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.authentication.RequestAuthenticatorFactory;
 import org.keycloak.adapters.springsecurity.authentication.SpringSecurityRequestAuthenticatorFactory;
 import org.keycloak.adapters.springsecurity.facade.SimpleHttpFacade;
@@ -22,8 +23,10 @@ import org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcess
 import org.keycloak.adapters.springsecurity.token.AdapterTokenStoreFactory;
 import org.keycloak.adapters.springsecurity.token.SpringSecurityAdapterTokenStoreFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 
@@ -34,10 +37,14 @@ public class CustomKeycloakAuthenticationProcessingFilter extends KeycloakAuthen
     private AdapterTokenStoreFactory customAdapterTokenStoreFactory = new SpringSecurityAdapterTokenStoreFactory();
     private RequestAuthenticatorFactory customRequestAuthenticatorFactory = new SpringSecurityRequestAuthenticatorFactory();
 
-    public CustomKeycloakAuthenticationProcessingFilter(AuthenticationManager authenticationManager, AdapterDeploymentContext customAdapterDeploymentContext) {
+    public CustomKeycloakAuthenticationProcessingFilter(AuthenticationManagerBuilder authManagerBuilder, AuthenticationManager authenticationManager, AdapterDeploymentContext customAdapterDeploymentContext) {
         super(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.customAdapterDeploymentContext = customAdapterDeploymentContext;
+        
+        KeycloakAuthenticationProvider keycloakAuthenticationProvider = new KeycloakAuthenticationProvider();
+        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
+        authManagerBuilder.authenticationProvider(keycloakAuthenticationProvider);
     }
 
     @Override
