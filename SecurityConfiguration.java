@@ -126,16 +126,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        //Bu method cross origin olmayan isteklerin filtrelerden geçmesini engelliyor
-        //ve corss-origin engelleyici header'ları ignore edilen path'ler için vermiyor.
-        //Bu nedenle cross-origin'den gönderilen ve ignore edilemeyen isteklerin filtrelerden etkilenmemesi için
-        //bu path'lerin filterelere verilerek conditional işlemler üzerinden atlatılması sağlanır.
-        //Örneğin login isteği front-end'ten geldiği için cross-site bir istektir ve burada ignore edilmek istenirse
-        //response header'larda allow-origin header'ı yer almayacağı için front-end'te hata meydana gelir.
-        //Bu gibi isteklerin filtrelerden(jwtFilter gibi) atlatılması için bu şekilde ignore edilmesi front-end'te hata oluşturacağı için 
-        //filtrelerin içerisinde atlatılması gerekir.
-        //swagger gibi direk back-end servislerini sunan yapılar zaten backend url üzerinden sunulduğu için burada ignore edilmesi
-        //filtrelerin atlatılmasını sağlanmış oluyor. Zaten front-end'i ilgilendirmeyen(yani front-end'ten gönderilmeyen) istekler olduğu için de sorun olmuyor.
         web.ignoring()
                 .antMatchers("/v3/api-docs",
                         "/actuator/health/**",
