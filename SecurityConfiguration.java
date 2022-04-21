@@ -8,11 +8,8 @@ import org.keycloak.adapters.AdapterDeploymentContext;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.AdapterDeploymentContextFactoryBean;
 import org.keycloak.adapters.springsecurity.config.KeycloakSpringConfigResolverWrapper;
-import org.keycloak.adapters.KeycloakConfigResolver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.Resource;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -56,9 +53,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
     @Autowired(required = false)
     private KeycloakConfigResolver keycloakConfigResolver;
 
-    @Value("${keycloak.configurationFile:WEB-INF/keycloak.json}")
-    private Resource keycloakConfigFileResource;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -82,13 +76,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
     @Bean
     protected AdapterDeploymentContext adapterDeploymentContext() throws Exception {
-        AdapterDeploymentContextFactoryBean factoryBean;
-        if (keycloakConfigResolver != null) {
-             factoryBean = new AdapterDeploymentContextFactoryBean(new KeycloakSpringConfigResolverWrapper(keycloakConfigResolver));
-        }
-        else {
-            factoryBean = new AdapterDeploymentContextFactoryBean(keycloakConfigFileResource);
-        }
+        AdapterDeploymentContextFactoryBean factoryBean = 
+                new AdapterDeploymentContextFactoryBean(new KeycloakSpringConfigResolverWrapper(KeycloakConfigResolver()));
         factoryBean.afterPropertiesSet();
         return factoryBean.getObject();
     }
