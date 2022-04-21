@@ -61,19 +61,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
     @Value("${keycloak.configurationFile:WEB-INF/keycloak.json}")
     private Resource keycloakConfigFileResource;
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        KeycloakAuthenticationProvider keycloakAuthenticationProvider
-                = keycloakAuthenticationProvider();
-        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(
-                new SimpleAuthorityMapper());
-        auth.authenticationProvider(keycloakAuthenticationProvider);
-    }
-
-    protected KeycloakAuthenticationProvider keycloakAuthenticationProvider() {
-        return new KeycloakAuthenticationProvider();
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
