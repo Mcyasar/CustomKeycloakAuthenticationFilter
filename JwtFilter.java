@@ -128,7 +128,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         response.setStatus(HttpStatus.NOT_FOUND.value());
                         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                         ErrorMessage errorMessage = ErrorMessageUtil
-                                .createErrorMessageJson("Kullanıcı adı bulunamamıştır.", HttpStatus.NOT_FOUND);
+                                .createErrorMessageJson("User Not Found.", HttpStatus.NOT_FOUND);
                         PrintWriter responseWriter = response.getWriter();
                         responseWriter.write(errorMessage.toJsonString());
                         return;
@@ -141,7 +141,7 @@ public class JwtFilter extends OncePerRequestFilter {
                             response.setStatus(HttpStatus.NOT_FOUND.value());
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson(
-                                    "Kullanıcı bilgileri bulunamamıştır.", HttpStatus.NOT_FOUND);
+                                    "User Not Found.", HttpStatus.NOT_FOUND);
                             PrintWriter responseWriter = response.getWriter();
                             responseWriter.write(errorMessage.toJsonString());
                             return;
@@ -150,7 +150,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 } catch (ExpiredJwtException e) {
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson("Session süresi dolmuştur.",
+                    ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson("Session timeout.",
                             HttpStatus.UNAUTHORIZED, "E_TIME_OUT");
                     PrintWriter responseWriter = response.getWriter();
                     responseWriter.write(errorMessage.toJsonString());
@@ -167,7 +167,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
 
                 if (minutes < 0) {
-                    // jwt'nin bitiş süresi refreshToken'in bitiş süresinin yarısı kadar ayarlanır
                     jwt = jwtUtil.generateTokenHalfExpiration(userDetails);
                     refreshJwt = jwtUtil.generateRefreshToken(userDetails);
                     response.setHeader("Authorization", jwt);
@@ -185,7 +184,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         response.setStatus(HttpStatus.NOT_FOUND.value());
                         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                         ErrorMessage errorMessage = ErrorMessageUtil
-                                .createErrorMessageJson("Kullanıcı adı bulunamamıştır.", HttpStatus.NOT_FOUND);
+                                .createErrorMessageJson("User Not Found.", HttpStatus.NOT_FOUND);
                         PrintWriter responseWriter = response.getWriter();
                         responseWriter.write(errorMessage.toJsonString());
                         return;
@@ -198,7 +197,7 @@ public class JwtFilter extends OncePerRequestFilter {
                             response.setStatus(HttpStatus.NOT_FOUND.value());
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson(
-                                    "Kullanıcı bilgileri bulunamamıştır.", HttpStatus.NOT_FOUND);
+                                    "User Not Found.", HttpStatus.NOT_FOUND);
                             PrintWriter responseWriter = response.getWriter();
                             responseWriter.write(errorMessage.toJsonString());
                             return;
@@ -208,7 +207,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 } catch (ExpiredJwtException e) {
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson("Session süresi dolmuştur.",
+                    ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson("Session timeout.",
                             HttpStatus.UNAUTHORIZED, "E_TIME_OUT");
                     PrintWriter responseWriter = response.getWriter();
                     responseWriter.write(errorMessage.toJsonString());
@@ -216,7 +215,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 } catch(IllegalArgumentException e){
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson("JWT çözümlenemedi.",
+                    ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson("JWT Not Parsed.",
                             HttpStatus.UNAUTHORIZED, "E_JWT_PARSE");
                     PrintWriter responseWriter = response.getWriter();
                     responseWriter.write(errorMessage.toJsonString());
@@ -235,7 +234,7 @@ public class JwtFilter extends OncePerRequestFilter {
             if(userDetails == null){
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson("User not found.",
+                ErrorMessage errorMessage = ErrorMessageUtil.createErrorMessageJson("User Not Found.",
                         HttpStatus.UNAUTHORIZED, "E_USER_NOT_FOUND");
                 PrintWriter responseWriter = response.getWriter();
                 responseWriter.write(errorMessage.toJsonString());
