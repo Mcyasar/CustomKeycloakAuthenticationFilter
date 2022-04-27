@@ -91,12 +91,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 if(userDetails == null){
                     userDetails = new UserDetailsExtend(username, token.getEmail(), null, true, true, true, true, null);
                     ((UserDetailsExtend)userDetails).setUniqident(UUID.randomUUID());
-                }
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
-                UsernamePasswordAuthenticationToken tkn = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), null);                
-                context.setAuthentication(tkn);                
-                SecurityContextHolder.setContext(context);       
-                request.setAttribute(UsernamePasswordAuthenticationToken.class.getName(), context);        
+                }      
             }catch(Exception ex){
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -242,7 +237,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             authComponent.setUserDetails(userDetails);
-
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
             usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
